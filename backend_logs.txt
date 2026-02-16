@@ -1,0 +1,421 @@
+FROM users 
+WHERE users.email = $1::VARCHAR
+2026-02-16 12:16:04,376 INFO sqlalchemy.engine.Engine [cached since 1.521s ago] ('amit@gmail.com',)
+2026-02-16 12:16:04,380 INFO sqlalchemy.engine.Engine SELECT conversations.id, conversations.type, conversations.name, conversations.created_at, conversations.updated_at 
+FROM conversations JOIN conversation_participants AS conversation_participants_1 ON conversations.id = conversation_participants_1.conversation_id JOIN conversation_participants AS conversation_participants_2 ON conversations.id = conversation_participants_2.conversation_id 
+WHERE conversations.type = $1::conversationtype AND conversation_participants_1.user_id = $2::UUID AND conversation_participants_2.user_id = $3::UUID
+2026-02-16 12:16:04,380 INFO sqlalchemy.engine.Engine [generated in 0.00014s] ('PRIVATE', UUID('780a71ec-9a28-4365-8f2d-73a104a701dc'), UUID('816b0b54-3ccc-4ca1-867b-cc96f6b349a8'))
+2026-02-16 12:16:04,386 INFO sqlalchemy.engine.Engine SELECT conversation_participants.conversation_id AS conversation_participants_conversation_id, conversation_participants.id AS conversation_participants_id, conversation_participants.user_id AS conversation_participants_user_id, conversation_participants.joined_at AS conversation_participants_joined_at, conversation_participants.last_read_at AS conversation_participants_last_read_at 
+FROM conversation_participants 
+WHERE conversation_participants.conversation_id IN ($1::UUID)
+2026-02-16 12:16:04,386 INFO sqlalchemy.engine.Engine [generated in 0.00016s] (UUID('92ac850d-25b5-40e3-8a74-b262fc7400b0'),)
+2026-02-16 12:16:04,389 INFO sqlalchemy.engine.Engine SELECT messages.conversation_id AS messages_conversation_id, messages.id AS messages_id, messages.sender_id AS messages_sender_id, messages.content AS messages_content, messages.message_type AS messages_message_type, messages.status AS messages_status, messages.is_edited AS messages_is_edited, messages.created_at AS messages_created_at, messages.updated_at AS messages_updated_at, messages.delivered_at AS messages_delivered_at, messages.read_at AS messages_read_at 
+FROM messages 
+WHERE messages.conversation_id IN ($1::UUID)
+2026-02-16 12:16:04,389 INFO sqlalchemy.engine.Engine [generated in 0.00014s] (UUID('92ac850d-25b5-40e3-8a74-b262fc7400b0'),)
+2026-02-16 12:16:04,429 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.is_active AS users_is_active, users.created_at AS users_created_at, users.updated_at AS users_updated_at 
+FROM users 
+WHERE users.id IN ($1::UUID, $2::UUID)
+2026-02-16 12:16:04,429 INFO sqlalchemy.engine.Engine [generated in 0.00026s] (UUID('780a71ec-9a28-4365-8f2d-73a104a701dc'), UUID('816b0b54-3ccc-4ca1-867b-cc96f6b349a8'))
+2026-02-16 12:16:04,431 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     172.24.0.1:38700 - "POST /api/chat/private HTTP/1.1" 200 OK
+2026-02-16 12:16:06,714 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-02-16 12:16:06,715 INFO sqlalchemy.engine.Engine SELECT conversation_participants.id, conversation_participants.conversation_id, conversation_participants.user_id, conversation_participants.joined_at, conversation_participants.last_read_at 
+FROM conversation_participants 
+WHERE conversation_participants.conversation_id = $1::UUID AND conversation_participants.user_id = $2::UUID
+2026-02-16 12:16:06,715 INFO sqlalchemy.engine.Engine [generated in 0.00014s] (UUID('92ac850d-25b5-40e3-8a74-b262fc7400b0'), '780a71ec-9a28-4365-8f2d-73a104a701dc')
+2026-02-16 12:16:06,718 INFO sqlalchemy.engine.Engine INSERT INTO messages (id, conversation_id, sender_id, content, message_type, status, is_edited, created_at, updated_at, delivered_at, read_at) VALUES ($1::UUID, $2::UUID, $3::UUID, $4::VARCHAR, $5::messagetype, $6::messagestatus, $7::BOOLEAN, $8::TIMESTAMP WITHOUT TIME ZONE, $9::TIMESTAMP WITHOUT TIME ZONE, $10::TIMESTAMP WITHOUT TIME ZONE, $11::TIMESTAMP WITHOUT TIME ZONE)
+2026-02-16 12:16:06,718 INFO sqlalchemy.engine.Engine [generated in 0.00022s] (UUID('41751b7e-32ab-4b7c-9337-d001c73cdd36'), UUID('92ac850d-25b5-40e3-8a74-b262fc7400b0'), '780a71ec-9a28-4365-8f2d-73a104a701dc', 'hii', 'TEXT', 'SENT', False, datetime.datetime(2026, 2, 16, 12, 16, 6, 718500), datetime.datetime(2026, 2, 16, 12, 16, 6, 718503), None, None)
+2026-02-16 12:16:06,720 INFO sqlalchemy.engine.Engine COMMIT
+2026-02-16 12:16:06,722 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-02-16 12:16:06,723 INFO sqlalchemy.engine.Engine SELECT messages.id, messages.conversation_id, messages.sender_id, messages.content, messages.message_type, messages.status, messages.is_edited, messages.created_at, messages.updated_at, messages.delivered_at, messages.read_at 
+FROM messages 
+WHERE messages.id = $1::UUID
+2026-02-16 12:16:06,723 INFO sqlalchemy.engine.Engine [generated in 0.00019s] (UUID('41751b7e-32ab-4b7c-9337-d001c73cdd36'),)
+2026-02-16 12:16:06,725 INFO sqlalchemy.engine.Engine SELECT conversation_participants.id, conversation_participants.conversation_id, conversation_participants.user_id, conversation_participants.joined_at, conversation_participants.last_read_at 
+FROM conversation_participants 
+WHERE conversation_participants.conversation_id = $1::UUID
+2026-02-16 12:16:06,725 INFO sqlalchemy.engine.Engine [generated in 0.00011s] (UUID('92ac850d-25b5-40e3-8a74-b262fc7400b0'),)
+INFO:     172.24.0.1:38718 - "OPTIONS /api/friends/requests HTTP/1.1" 200 OK
+2026-02-16 12:16:11,852 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-02-16 12:16:11,853 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.is_active, users.created_at, users.updated_at 
+FROM users 
+WHERE users.email = $1::VARCHAR
+2026-02-16 12:16:11,853 INFO sqlalchemy.engine.Engine [cached since 8.998s ago] ('amit1@gmail.com',)
+2026-02-16 12:16:11,856 INFO sqlalchemy.engine.Engine SELECT friend_requests.id, friend_requests.sender_id, friend_requests.receiver_id, friend_requests.status, friend_requests.created_at, friend_requests.updated_at 
+FROM friend_requests 
+WHERE friend_requests.receiver_id = $1::UUID AND friend_requests.status = $2::friendrequeststatus ORDER BY friend_requests.created_at DESC
+2026-02-16 12:16:11,856 INFO sqlalchemy.engine.Engine [cached since 8.996s ago] (UUID('816b0b54-3ccc-4ca1-867b-cc96f6b349a8'), 'PENDING')
+2026-02-16 12:16:11,866 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     172.24.0.1:38718 - "GET /api/friends/requests HTTP/1.1" 200 OK
+INFO:     172.24.0.1:38718 - "OPTIONS /api/friends HTTP/1.1" 200 OK
+INFO:     172.24.0.1:38746 - "GET /api/friends HTTP/1.1" 307 Temporary Redirect
+INFO:     172.24.0.1:38746 - "OPTIONS /api/friends/ HTTP/1.1" 200 OK
+2026-02-16 12:16:13,133 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-02-16 12:16:13,133 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.is_active, users.created_at, users.updated_at 
+FROM users 
+WHERE users.email = $1::VARCHAR
+2026-02-16 12:16:13,133 INFO sqlalchemy.engine.Engine [cached since 10.28s ago] ('amit1@gmail.com',)
+2026-02-16 12:16:13,134 INFO sqlalchemy.engine.Engine SELECT friends.id, friends.user_id, friends.friend_id, friends.created_at 
+FROM friends 
+WHERE friends.user_id = $1::UUID
+2026-02-16 12:16:13,134 INFO sqlalchemy.engine.Engine [cached since 9.294s ago] (UUID('816b0b54-3ccc-4ca1-867b-cc96f6b349a8'),)
+2026-02-16 12:16:13,136 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.is_active AS users_is_active, users.created_at AS users_created_at, users.updated_at AS users_updated_at 
+FROM users 
+WHERE users.id IN ($1::UUID)
+2026-02-16 12:16:13,136 INFO sqlalchemy.engine.Engine [cached since 9.292s ago] (UUID('780a71ec-9a28-4365-8f2d-73a104a701dc'),)
+2026-02-16 12:16:13,136 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     172.24.0.1:38718 - "GET /api/friends/ HTTP/1.1" 200 OK
+INFO:     172.24.0.1:38718 - "OPTIONS /api/chat/private HTTP/1.1" 200 OK
+2026-02-16 12:16:15,243 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-02-16 12:16:15,244 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.is_active, users.created_at, users.updated_at 
+FROM users 
+WHERE users.email = $1::VARCHAR
+2026-02-16 12:16:15,244 INFO sqlalchemy.engine.Engine [cached since 12.39s ago] ('amit1@gmail.com',)
+2026-02-16 12:16:15,246 INFO sqlalchemy.engine.Engine SELECT conversations.id, conversations.type, conversations.name, conversations.created_at, conversations.updated_at 
+FROM conversations JOIN conversation_participants AS conversation_participants_1 ON conversations.id = conversation_participants_1.conversation_id JOIN conversation_participants AS conversation_participants_2 ON conversations.id = conversation_participants_2.conversation_id 
+WHERE conversations.type = $1::conversationtype AND conversation_participants_1.user_id = $2::UUID AND conversation_participants_2.user_id = $3::UUID
+2026-02-16 12:16:15,246 INFO sqlalchemy.engine.Engine [cached since 10.87s ago] ('PRIVATE', UUID('816b0b54-3ccc-4ca1-867b-cc96f6b349a8'), UUID('780a71ec-9a28-4365-8f2d-73a104a701dc'))
+2026-02-16 12:16:15,252 INFO sqlalchemy.engine.Engine SELECT conversation_participants.conversation_id AS conversation_participants_conversation_id, conversation_participants.id AS conversation_participants_id, conversation_participants.user_id AS conversation_participants_user_id, conversation_participants.joined_at AS conversation_participants_joined_at, conversation_participants.last_read_at AS conversation_participants_last_read_at 
+FROM conversation_participants 
+WHERE conversation_participants.conversation_id IN ($1::UUID)
+2026-02-16 12:16:15,252 INFO sqlalchemy.engine.Engine [cached since 10.87s ago] (UUID('92ac850d-25b5-40e3-8a74-b262fc7400b0'),)
+2026-02-16 12:16:15,253 INFO sqlalchemy.engine.Engine SELECT messages.conversation_id AS messages_conversation_id, messages.id AS messages_id, messages.sender_id AS messages_sender_id, messages.content AS messages_content, messages.message_type AS messages_message_type, messages.status AS messages_status, messages.is_edited AS messages_is_edited, messages.created_at AS messages_created_at, messages.updated_at AS messages_updated_at, messages.delivered_at AS messages_delivered_at, messages.read_at AS messages_read_at 
+FROM messages 
+WHERE messages.conversation_id IN ($1::UUID)
+2026-02-16 12:16:15,253 INFO sqlalchemy.engine.Engine [cached since 10.87s ago] (UUID('92ac850d-25b5-40e3-8a74-b262fc7400b0'),)
+2026-02-16 12:16:15,258 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.is_active AS users_is_active, users.created_at AS users_created_at, users.updated_at AS users_updated_at 
+FROM users 
+WHERE users.id IN ($1::UUID, $2::UUID)
+2026-02-16 12:16:15,258 INFO sqlalchemy.engine.Engine [cached since 10.83s ago] (UUID('780a71ec-9a28-4365-8f2d-73a104a701dc'), UUID('816b0b54-3ccc-4ca1-867b-cc96f6b349a8'))
+2026-02-16 12:16:15,259 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     172.24.0.1:38746 - "POST /api/chat/private HTTP/1.1" 200 OK
+2026-02-16 12:16:29,676 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     172.24.0.1:38712 - "OPTIONS /api/friends/requests HTTP/1.1" 200 OK
+2026-02-16 12:16:29,783 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-02-16 12:16:29,784 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.is_active, users.created_at, users.updated_at 
+FROM users 
+WHERE users.email = $1::VARCHAR
+2026-02-16 12:16:29,784 INFO sqlalchemy.engine.Engine [cached since 26.93s ago] ('amit@gmail.com',)
+2026-02-16 12:16:29,785 INFO sqlalchemy.engine.Engine SELECT friend_requests.id, friend_requests.sender_id, friend_requests.receiver_id, friend_requests.status, friend_requests.created_at, friend_requests.updated_at 
+FROM friend_requests 
+WHERE friend_requests.receiver_id = $1::UUID AND friend_requests.status = $2::friendrequeststatus ORDER BY friend_requests.created_at DESC
+2026-02-16 12:16:29,785 INFO sqlalchemy.engine.Engine [cached since 26.92s ago] (UUID('780a71ec-9a28-4365-8f2d-73a104a701dc'), 'PENDING')
+2026-02-16 12:16:29,787 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     172.24.0.1:38712 - "GET /api/friends/requests HTTP/1.1" 200 OK
+INFO:     172.24.0.1:38712 - "OPTIONS /api/friends/requests HTTP/1.1" 200 OK
+2026-02-16 12:16:30,370 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-02-16 12:16:30,370 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.is_active, users.created_at, users.updated_at 
+FROM users 
+WHERE users.email = $1::VARCHAR
+2026-02-16 12:16:30,370 INFO sqlalchemy.engine.Engine [cached since 27.52s ago] ('amit@gmail.com',)
+2026-02-16 12:16:30,372 INFO sqlalchemy.engine.Engine SELECT friend_requests.id, friend_requests.sender_id, friend_requests.receiver_id, friend_requests.status, friend_requests.created_at, friend_requests.updated_at 
+FROM friend_requests 
+WHERE friend_requests.receiver_id = $1::UUID AND friend_requests.status = $2::friendrequeststatus ORDER BY friend_requests.created_at DESC
+2026-02-16 12:16:30,372 INFO sqlalchemy.engine.Engine [cached since 27.51s ago] (UUID('780a71ec-9a28-4365-8f2d-73a104a701dc'), 'PENDING')
+2026-02-16 12:16:30,373 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     172.24.0.1:38712 - "GET /api/friends/requests HTTP/1.1" 200 OK
+INFO:     172.24.0.1:38712 - "GET /api/friends HTTP/1.1" 307 Temporary Redirect
+2026-02-16 12:16:32,720 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-02-16 12:16:32,720 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.is_active, users.created_at, users.updated_at 
+FROM users 
+WHERE users.email = $1::VARCHAR
+2026-02-16 12:16:32,720 INFO sqlalchemy.engine.Engine [cached since 29.87s ago] ('amit@gmail.com',)
+2026-02-16 12:16:32,721 INFO sqlalchemy.engine.Engine SELECT friends.id, friends.user_id, friends.friend_id, friends.created_at 
+FROM friends 
+WHERE friends.user_id = $1::UUID
+2026-02-16 12:16:32,721 INFO sqlalchemy.engine.Engine [cached since 28.88s ago] (UUID('780a71ec-9a28-4365-8f2d-73a104a701dc'),)
+2026-02-16 12:16:32,722 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.is_active AS users_is_active, users.created_at AS users_created_at, users.updated_at AS users_updated_at 
+FROM users 
+WHERE users.id IN ($1::UUID)
+2026-02-16 12:16:32,722 INFO sqlalchemy.engine.Engine [cached since 28.88s ago] (UUID('816b0b54-3ccc-4ca1-867b-cc96f6b349a8'),)
+2026-02-16 12:16:32,723 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     172.24.0.1:38712 - "GET /api/friends/ HTTP/1.1" 200 OK
+2026-02-16 12:16:33,162 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-02-16 12:16:33,163 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.is_active, users.created_at, users.updated_at 
+FROM users 
+WHERE users.email = $1::VARCHAR
+2026-02-16 12:16:33,163 INFO sqlalchemy.engine.Engine [cached since 30.31s ago] ('amit@gmail.com',)
+2026-02-16 12:16:33,164 INFO sqlalchemy.engine.Engine SELECT conversations.id, conversations.type, conversations.name, conversations.created_at, conversations.updated_at 
+FROM conversations JOIN conversation_participants AS conversation_participants_1 ON conversations.id = conversation_participants_1.conversation_id JOIN conversation_participants AS conversation_participants_2 ON conversations.id = conversation_participants_2.conversation_id 
+WHERE conversations.type = $1::conversationtype AND conversation_participants_1.user_id = $2::UUID AND conversation_participants_2.user_id = $3::UUID
+2026-02-16 12:16:33,164 INFO sqlalchemy.engine.Engine [cached since 28.79s ago] ('PRIVATE', UUID('780a71ec-9a28-4365-8f2d-73a104a701dc'), UUID('816b0b54-3ccc-4ca1-867b-cc96f6b349a8'))
+2026-02-16 12:16:33,166 INFO sqlalchemy.engine.Engine SELECT conversation_participants.conversation_id AS conversation_participants_conversation_id, conversation_participants.id AS conversation_participants_id, conversation_participants.user_id AS conversation_participants_user_id, conversation_participants.joined_at AS conversation_participants_joined_at, conversation_participants.last_read_at AS conversation_participants_last_read_at 
+FROM conversation_participants 
+WHERE conversation_participants.conversation_id IN ($1::UUID)
+2026-02-16 12:16:33,166 INFO sqlalchemy.engine.Engine [cached since 28.78s ago] (UUID('92ac850d-25b5-40e3-8a74-b262fc7400b0'),)
+2026-02-16 12:16:33,166 INFO sqlalchemy.engine.Engine SELECT messages.conversation_id AS messages_conversation_id, messages.id AS messages_id, messages.sender_id AS messages_sender_id, messages.content AS messages_content, messages.message_type AS messages_message_type, messages.status AS messages_status, messages.is_edited AS messages_is_edited, messages.created_at AS messages_created_at, messages.updated_at AS messages_updated_at, messages.delivered_at AS messages_delivered_at, messages.read_at AS messages_read_at 
+FROM messages 
+WHERE messages.conversation_id IN ($1::UUID)
+2026-02-16 12:16:33,166 INFO sqlalchemy.engine.Engine [cached since 28.78s ago] (UUID('92ac850d-25b5-40e3-8a74-b262fc7400b0'),)
+2026-02-16 12:16:33,167 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.is_active AS users_is_active, users.created_at AS users_created_at, users.updated_at AS users_updated_at 
+FROM users 
+WHERE users.id IN ($1::UUID, $2::UUID)
+2026-02-16 12:16:33,167 INFO sqlalchemy.engine.Engine [cached since 28.74s ago] (UUID('780a71ec-9a28-4365-8f2d-73a104a701dc'), UUID('816b0b54-3ccc-4ca1-867b-cc96f6b349a8'))
+2026-02-16 12:16:33,168 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     172.24.0.1:38712 - "POST /api/chat/private HTTP/1.1" 200 OK
+2026-02-16 12:16:36,665 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-02-16 12:16:36,665 INFO sqlalchemy.engine.Engine SELECT conversation_participants.id, conversation_participants.conversation_id, conversation_participants.user_id, conversation_participants.joined_at, conversation_participants.last_read_at 
+FROM conversation_participants 
+WHERE conversation_participants.conversation_id = $1::UUID AND conversation_participants.user_id = $2::UUID
+2026-02-16 12:16:36,666 INFO sqlalchemy.engine.Engine [cached since 29.95s ago] (UUID('92ac850d-25b5-40e3-8a74-b262fc7400b0'), '780a71ec-9a28-4365-8f2d-73a104a701dc')
+2026-02-16 12:16:36,667 INFO sqlalchemy.engine.Engine INSERT INTO messages (id, conversation_id, sender_id, content, message_type, status, is_edited, created_at, updated_at, delivered_at, read_at) VALUES ($1::UUID, $2::UUID, $3::UUID, $4::VARCHAR, $5::messagetype, $6::messagestatus, $7::BOOLEAN, $8::TIMESTAMP WITHOUT TIME ZONE, $9::TIMESTAMP WITHOUT TIME ZONE, $10::TIMESTAMP WITHOUT TIME ZONE, $11::TIMESTAMP WITHOUT TIME ZONE)
+2026-02-16 12:16:36,667 INFO sqlalchemy.engine.Engine [cached since 29.95s ago] (UUID('be2814a5-15bb-4c72-be31-51609dfde229'), UUID('92ac850d-25b5-40e3-8a74-b262fc7400b0'), '780a71ec-9a28-4365-8f2d-73a104a701dc', 'hii', 'TEXT', 'SENT', False, datetime.datetime(2026, 2, 16, 12, 16, 36, 667525), datetime.datetime(2026, 2, 16, 12, 16, 36, 667526), None, None)
+2026-02-16 12:16:36,668 INFO sqlalchemy.engine.Engine COMMIT
+2026-02-16 12:16:36,670 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-02-16 12:16:36,670 INFO sqlalchemy.engine.Engine SELECT messages.id, messages.conversation_id, messages.sender_id, messages.content, messages.message_type, messages.status, messages.is_edited, messages.created_at, messages.updated_at, messages.delivered_at, messages.read_at 
+FROM messages 
+WHERE messages.id = $1::UUID
+2026-02-16 12:16:36,670 INFO sqlalchemy.engine.Engine [cached since 29.95s ago] (UUID('be2814a5-15bb-4c72-be31-51609dfde229'),)
+2026-02-16 12:16:36,671 INFO sqlalchemy.engine.Engine SELECT conversation_participants.id, conversation_participants.conversation_id, conversation_participants.user_id, conversation_participants.joined_at, conversation_participants.last_read_at 
+FROM conversation_participants 
+WHERE conversation_participants.conversation_id = $1::UUID
+2026-02-16 12:16:36,671 INFO sqlalchemy.engine.Engine [cached since 29.95s ago] (UUID('92ac850d-25b5-40e3-8a74-b262fc7400b0'),)
+2026-02-16 12:16:39,098 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-02-16 12:16:39,098 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.is_active, users.created_at, users.updated_at 
+FROM users 
+WHERE users.email = $1::VARCHAR
+2026-02-16 12:16:39,098 INFO sqlalchemy.engine.Engine [cached since 36.25s ago] ('amit1@gmail.com',)
+2026-02-16 12:16:39,100 INFO sqlalchemy.engine.Engine SELECT friend_requests.id, friend_requests.sender_id, friend_requests.receiver_id, friend_requests.status, friend_requests.created_at, friend_requests.updated_at 
+FROM friend_requests 
+WHERE friend_requests.receiver_id = $1::UUID AND friend_requests.status = $2::friendrequeststatus ORDER BY friend_requests.created_at DESC
+2026-02-16 12:16:39,100 INFO sqlalchemy.engine.Engine [cached since 36.24s ago] (UUID('816b0b54-3ccc-4ca1-867b-cc96f6b349a8'), 'PENDING')
+2026-02-16 12:16:39,101 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     172.24.0.1:39972 - "GET /api/friends/requests HTTP/1.1" 200 OK
+2026-02-16 12:16:39,313 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-02-16 12:16:39,313 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.is_active, users.created_at, users.updated_at 
+FROM users 
+WHERE users.email = $1::VARCHAR
+2026-02-16 12:16:39,313 INFO sqlalchemy.engine.Engine [cached since 36.46s ago] ('amit1@gmail.com',)
+2026-02-16 12:16:39,315 INFO sqlalchemy.engine.Engine SELECT friend_requests.id, friend_requests.sender_id, friend_requests.receiver_id, friend_requests.status, friend_requests.created_at, friend_requests.updated_at 
+FROM friend_requests 
+WHERE friend_requests.receiver_id = $1::UUID AND friend_requests.status = $2::friendrequeststatus ORDER BY friend_requests.created_at DESC
+2026-02-16 12:16:39,315 INFO sqlalchemy.engine.Engine [cached since 36.46s ago] (UUID('816b0b54-3ccc-4ca1-867b-cc96f6b349a8'), 'PENDING')
+2026-02-16 12:16:39,316 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     172.24.0.1:39972 - "GET /api/friends/requests HTTP/1.1" 200 OK
+2026-02-16 12:16:39,530 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-02-16 12:16:39,530 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.is_active, users.created_at, users.updated_at 
+FROM users 
+WHERE users.email = $1::VARCHAR
+2026-02-16 12:16:39,530 INFO sqlalchemy.engine.Engine [cached since 36.68s ago] ('amit1@gmail.com',)
+2026-02-16 12:16:39,532 INFO sqlalchemy.engine.Engine SELECT friend_requests.id, friend_requests.sender_id, friend_requests.receiver_id, friend_requests.status, friend_requests.created_at, friend_requests.updated_at 
+FROM friend_requests 
+WHERE friend_requests.receiver_id = $1::UUID AND friend_requests.status = $2::friendrequeststatus ORDER BY friend_requests.created_at DESC
+2026-02-16 12:16:39,532 INFO sqlalchemy.engine.Engine [cached since 36.67s ago] (UUID('816b0b54-3ccc-4ca1-867b-cc96f6b349a8'), 'PENDING')
+2026-02-16 12:16:39,533 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     172.24.0.1:39972 - "GET /api/friends/requests HTTP/1.1" 200 OK
+2026-02-16 12:16:39,711 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-02-16 12:16:39,712 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.is_active, users.created_at, users.updated_at 
+FROM users 
+WHERE users.email = $1::VARCHAR
+2026-02-16 12:16:39,712 INFO sqlalchemy.engine.Engine [cached since 36.86s ago] ('amit1@gmail.com',)
+2026-02-16 12:16:39,713 INFO sqlalchemy.engine.Engine SELECT friend_requests.id, friend_requests.sender_id, friend_requests.receiver_id, friend_requests.status, friend_requests.created_at, friend_requests.updated_at 
+FROM friend_requests 
+WHERE friend_requests.receiver_id = $1::UUID AND friend_requests.status = $2::friendrequeststatus ORDER BY friend_requests.created_at DESC
+2026-02-16 12:16:39,713 INFO sqlalchemy.engine.Engine [cached since 36.85s ago] (UUID('816b0b54-3ccc-4ca1-867b-cc96f6b349a8'), 'PENDING')
+2026-02-16 12:16:39,714 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     172.24.0.1:39972 - "GET /api/friends/requests HTTP/1.1" 200 OK
+2026-02-16 12:16:39,884 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-02-16 12:16:39,885 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.is_active, users.created_at, users.updated_at 
+FROM users 
+WHERE users.email = $1::VARCHAR
+2026-02-16 12:16:39,885 INFO sqlalchemy.engine.Engine [cached since 37.03s ago] ('amit1@gmail.com',)
+2026-02-16 12:16:39,886 INFO sqlalchemy.engine.Engine SELECT friend_requests.id, friend_requests.sender_id, friend_requests.receiver_id, friend_requests.status, friend_requests.created_at, friend_requests.updated_at 
+FROM friend_requests 
+WHERE friend_requests.receiver_id = $1::UUID AND friend_requests.status = $2::friendrequeststatus ORDER BY friend_requests.created_at DESC
+2026-02-16 12:16:39,886 INFO sqlalchemy.engine.Engine [cached since 37.03s ago] (UUID('816b0b54-3ccc-4ca1-867b-cc96f6b349a8'), 'PENDING')
+2026-02-16 12:16:39,887 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     172.24.0.1:39972 - "GET /api/friends/requests HTTP/1.1" 200 OK
+INFO:     172.24.0.1:39972 - "GET /api/friends HTTP/1.1" 307 Temporary Redirect
+2026-02-16 12:16:40,917 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-02-16 12:16:40,917 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.is_active, users.created_at, users.updated_at 
+FROM users 
+WHERE users.email = $1::VARCHAR
+2026-02-16 12:16:40,917 INFO sqlalchemy.engine.Engine [cached since 38.06s ago] ('amit1@gmail.com',)
+2026-02-16 12:16:40,918 INFO sqlalchemy.engine.Engine SELECT friends.id, friends.user_id, friends.friend_id, friends.created_at 
+FROM friends 
+WHERE friends.user_id = $1::UUID
+2026-02-16 12:16:40,918 INFO sqlalchemy.engine.Engine [cached since 37.08s ago] (UUID('816b0b54-3ccc-4ca1-867b-cc96f6b349a8'),)
+2026-02-16 12:16:40,919 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.is_active AS users_is_active, users.created_at AS users_created_at, users.updated_at AS users_updated_at 
+FROM users 
+WHERE users.id IN ($1::UUID)
+2026-02-16 12:16:40,919 INFO sqlalchemy.engine.Engine [cached since 37.08s ago] (UUID('780a71ec-9a28-4365-8f2d-73a104a701dc'),)
+2026-02-16 12:16:40,920 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     172.24.0.1:39972 - "GET /api/friends/ HTTP/1.1" 200 OK
+2026-02-16 12:16:41,397 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-02-16 12:16:41,398 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.is_active, users.created_at, users.updated_at 
+FROM users 
+WHERE users.email = $1::VARCHAR
+2026-02-16 12:16:41,398 INFO sqlalchemy.engine.Engine [cached since 38.54s ago] ('amit1@gmail.com',)
+2026-02-16 12:16:41,400 INFO sqlalchemy.engine.Engine SELECT conversations.id, conversations.type, conversations.name, conversations.created_at, conversations.updated_at 
+FROM conversations JOIN conversation_participants AS conversation_participants_1 ON conversations.id = conversation_participants_1.conversation_id JOIN conversation_participants AS conversation_participants_2 ON conversations.id = conversation_participants_2.conversation_id 
+WHERE conversations.type = $1::conversationtype AND conversation_participants_1.user_id = $2::UUID AND conversation_participants_2.user_id = $3::UUID
+2026-02-16 12:16:41,400 INFO sqlalchemy.engine.Engine [cached since 37.02s ago] ('PRIVATE', UUID('816b0b54-3ccc-4ca1-867b-cc96f6b349a8'), UUID('780a71ec-9a28-4365-8f2d-73a104a701dc'))
+2026-02-16 12:16:41,400 INFO sqlalchemy.engine.Engine SELECT conversation_participants.conversation_id AS conversation_participants_conversation_id, conversation_participants.id AS conversation_participants_id, conversation_participants.user_id AS conversation_participants_user_id, conversation_participants.joined_at AS conversation_participants_joined_at, conversation_participants.last_read_at AS conversation_participants_last_read_at 
+FROM conversation_participants 
+WHERE conversation_participants.conversation_id IN ($1::UUID)
+2026-02-16 12:16:41,401 INFO sqlalchemy.engine.Engine [cached since 37.02s ago] (UUID('92ac850d-25b5-40e3-8a74-b262fc7400b0'),)
+2026-02-16 12:16:41,401 INFO sqlalchemy.engine.Engine SELECT messages.conversation_id AS messages_conversation_id, messages.id AS messages_id, messages.sender_id AS messages_sender_id, messages.content AS messages_content, messages.message_type AS messages_message_type, messages.status AS messages_status, messages.is_edited AS messages_is_edited, messages.created_at AS messages_created_at, messages.updated_at AS messages_updated_at, messages.delivered_at AS messages_delivered_at, messages.read_at AS messages_read_at 
+FROM messages 
+WHERE messages.conversation_id IN ($1::UUID)
+2026-02-16 12:16:41,401 INFO sqlalchemy.engine.Engine [cached since 37.01s ago] (UUID('92ac850d-25b5-40e3-8a74-b262fc7400b0'),)
+2026-02-16 12:16:41,402 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.is_active AS users_is_active, users.created_at AS users_created_at, users.updated_at AS users_updated_at 
+FROM users 
+WHERE users.id IN ($1::UUID, $2::UUID)
+2026-02-16 12:16:41,402 INFO sqlalchemy.engine.Engine [cached since 36.98s ago] (UUID('780a71ec-9a28-4365-8f2d-73a104a701dc'), UUID('816b0b54-3ccc-4ca1-867b-cc96f6b349a8'))
+2026-02-16 12:16:41,403 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     172.24.0.1:39972 - "POST /api/chat/private HTTP/1.1" 200 OK
+2026-02-16 12:16:43,705 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-02-16 12:16:43,705 INFO sqlalchemy.engine.Engine SELECT conversation_participants.id, conversation_participants.conversation_id, conversation_participants.user_id, conversation_participants.joined_at, conversation_participants.last_read_at 
+FROM conversation_participants 
+WHERE conversation_participants.conversation_id = $1::UUID AND conversation_participants.user_id = $2::UUID
+2026-02-16 12:16:43,705 INFO sqlalchemy.engine.Engine [cached since 36.99s ago] (UUID('92ac850d-25b5-40e3-8a74-b262fc7400b0'), '816b0b54-3ccc-4ca1-867b-cc96f6b349a8')
+2026-02-16 12:16:43,706 INFO sqlalchemy.engine.Engine INSERT INTO messages (id, conversation_id, sender_id, content, message_type, status, is_edited, created_at, updated_at, delivered_at, read_at) VALUES ($1::UUID, $2::UUID, $3::UUID, $4::VARCHAR, $5::messagetype, $6::messagestatus, $7::BOOLEAN, $8::TIMESTAMP WITHOUT TIME ZONE, $9::TIMESTAMP WITHOUT TIME ZONE, $10::TIMESTAMP WITHOUT TIME ZONE, $11::TIMESTAMP WITHOUT TIME ZONE)
+2026-02-16 12:16:43,706 INFO sqlalchemy.engine.Engine [cached since 36.99s ago] (UUID('876000f2-1dc7-49a4-8c58-293614dee7b5'), UUID('92ac850d-25b5-40e3-8a74-b262fc7400b0'), '816b0b54-3ccc-4ca1-867b-cc96f6b349a8', 'hii', 'TEXT', 'SENT', False, datetime.datetime(2026, 2, 16, 12, 16, 43, 706761), datetime.datetime(2026, 2, 16, 12, 16, 43, 706762), None, None)
+2026-02-16 12:16:43,707 INFO sqlalchemy.engine.Engine COMMIT
+2026-02-16 12:16:43,709 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-02-16 12:16:43,709 INFO sqlalchemy.engine.Engine SELECT messages.id, messages.conversation_id, messages.sender_id, messages.content, messages.message_type, messages.status, messages.is_edited, messages.created_at, messages.updated_at, messages.delivered_at, messages.read_at 
+FROM messages 
+WHERE messages.id = $1::UUID
+2026-02-16 12:16:43,709 INFO sqlalchemy.engine.Engine [cached since 36.99s ago] (UUID('876000f2-1dc7-49a4-8c58-293614dee7b5'),)
+2026-02-16 12:16:43,710 INFO sqlalchemy.engine.Engine SELECT conversation_participants.id, conversation_participants.conversation_id, conversation_participants.user_id, conversation_participants.joined_at, conversation_participants.last_read_at 
+FROM conversation_participants 
+WHERE conversation_participants.conversation_id = $1::UUID
+2026-02-16 12:16:43,710 INFO sqlalchemy.engine.Engine [cached since 36.99s ago] (UUID('92ac850d-25b5-40e3-8a74-b262fc7400b0'),)
+2026-02-16 12:16:48,640 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-02-16 12:16:48,740 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-02-16 12:16:48,741 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.is_active, users.created_at, users.updated_at 
+FROM users 
+WHERE users.email = $1::VARCHAR
+2026-02-16 12:16:48,741 INFO sqlalchemy.engine.Engine [cached since 45.89s ago] ('amit@gmail.com',)
+2026-02-16 12:16:48,742 INFO sqlalchemy.engine.Engine SELECT friend_requests.id, friend_requests.sender_id, friend_requests.receiver_id, friend_requests.status, friend_requests.created_at, friend_requests.updated_at 
+FROM friend_requests 
+WHERE friend_requests.receiver_id = $1::UUID AND friend_requests.status = $2::friendrequeststatus ORDER BY friend_requests.created_at DESC
+2026-02-16 12:16:48,742 INFO sqlalchemy.engine.Engine [cached since 45.88s ago] (UUID('780a71ec-9a28-4365-8f2d-73a104a701dc'), 'PENDING')
+2026-02-16 12:16:48,743 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     172.24.0.1:36570 - "GET /api/friends/requests HTTP/1.1" 200 OK
+2026-02-16 12:16:49,154 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-02-16 12:16:49,154 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.is_active, users.created_at, users.updated_at 
+FROM users 
+WHERE users.email = $1::VARCHAR
+2026-02-16 12:16:49,154 INFO sqlalchemy.engine.Engine [cached since 46.3s ago] ('amit@gmail.com',)
+2026-02-16 12:16:49,156 INFO sqlalchemy.engine.Engine SELECT friend_requests.id, friend_requests.sender_id, friend_requests.receiver_id, friend_requests.status, friend_requests.created_at, friend_requests.updated_at 
+FROM friend_requests 
+WHERE friend_requests.receiver_id = $1::UUID AND friend_requests.status = $2::friendrequeststatus ORDER BY friend_requests.created_at DESC
+2026-02-16 12:16:49,156 INFO sqlalchemy.engine.Engine [cached since 46.3s ago] (UUID('780a71ec-9a28-4365-8f2d-73a104a701dc'), 'PENDING')
+2026-02-16 12:16:49,157 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     172.24.0.1:36570 - "GET /api/friends/requests HTTP/1.1" 200 OK
+INFO:     172.24.0.1:37506 - "OPTIONS /api/friends HTTP/1.1" 200 OK
+INFO:     172.24.0.1:37506 - "GET /api/friends HTTP/1.1" 307 Temporary Redirect
+INFO:     172.24.0.1:37506 - "OPTIONS /api/friends/ HTTP/1.1" 200 OK
+2026-02-16 12:17:05,712 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-02-16 12:17:05,712 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.is_active, users.created_at, users.updated_at 
+FROM users 
+WHERE users.email = $1::VARCHAR
+2026-02-16 12:17:05,712 INFO sqlalchemy.engine.Engine [cached since 62.86s ago] ('amit@gmail.com',)
+2026-02-16 12:17:05,714 INFO sqlalchemy.engine.Engine SELECT friends.id, friends.user_id, friends.friend_id, friends.created_at 
+FROM friends 
+WHERE friends.user_id = $1::UUID
+2026-02-16 12:17:05,714 INFO sqlalchemy.engine.Engine [cached since 61.87s ago] (UUID('780a71ec-9a28-4365-8f2d-73a104a701dc'),)
+2026-02-16 12:17:05,715 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.is_active AS users_is_active, users.created_at AS users_created_at, users.updated_at AS users_updated_at 
+FROM users 
+WHERE users.id IN ($1::UUID)
+2026-02-16 12:17:05,715 INFO sqlalchemy.engine.Engine [cached since 61.87s ago] (UUID('816b0b54-3ccc-4ca1-867b-cc96f6b349a8'),)
+2026-02-16 12:17:05,716 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     172.24.0.1:37506 - "GET /api/friends/ HTTP/1.1" 200 OK
+INFO:     172.24.0.1:37506 - "OPTIONS /api/chat/private HTTP/1.1" 200 OK
+2026-02-16 12:17:06,263 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-02-16 12:17:06,264 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.is_active, users.created_at, users.updated_at 
+FROM users 
+WHERE users.email = $1::VARCHAR
+2026-02-16 12:17:06,264 INFO sqlalchemy.engine.Engine [cached since 63.41s ago] ('amit@gmail.com',)
+2026-02-16 12:17:06,266 INFO sqlalchemy.engine.Engine SELECT conversations.id, conversations.type, conversations.name, conversations.created_at, conversations.updated_at 
+FROM conversations JOIN conversation_participants AS conversation_participants_1 ON conversations.id = conversation_participants_1.conversation_id JOIN conversation_participants AS conversation_participants_2 ON conversations.id = conversation_participants_2.conversation_id 
+WHERE conversations.type = $1::conversationtype AND conversation_participants_1.user_id = $2::UUID AND conversation_participants_2.user_id = $3::UUID
+2026-02-16 12:17:06,266 INFO sqlalchemy.engine.Engine [cached since 61.89s ago] ('PRIVATE', UUID('780a71ec-9a28-4365-8f2d-73a104a701dc'), UUID('816b0b54-3ccc-4ca1-867b-cc96f6b349a8'))
+2026-02-16 12:17:06,268 INFO sqlalchemy.engine.Engine SELECT conversation_participants.conversation_id AS conversation_participants_conversation_id, conversation_participants.id AS conversation_participants_id, conversation_participants.user_id AS conversation_participants_user_id, conversation_participants.joined_at AS conversation_participants_joined_at, conversation_participants.last_read_at AS conversation_participants_last_read_at 
+FROM conversation_participants 
+WHERE conversation_participants.conversation_id IN ($1::UUID)
+2026-02-16 12:17:06,268 INFO sqlalchemy.engine.Engine [cached since 61.88s ago] (UUID('92ac850d-25b5-40e3-8a74-b262fc7400b0'),)
+2026-02-16 12:17:06,269 INFO sqlalchemy.engine.Engine SELECT messages.conversation_id AS messages_conversation_id, messages.id AS messages_id, messages.sender_id AS messages_sender_id, messages.content AS messages_content, messages.message_type AS messages_message_type, messages.status AS messages_status, messages.is_edited AS messages_is_edited, messages.created_at AS messages_created_at, messages.updated_at AS messages_updated_at, messages.delivered_at AS messages_delivered_at, messages.read_at AS messages_read_at 
+FROM messages 
+WHERE messages.conversation_id IN ($1::UUID)
+2026-02-16 12:17:06,269 INFO sqlalchemy.engine.Engine [cached since 61.88s ago] (UUID('92ac850d-25b5-40e3-8a74-b262fc7400b0'),)
+2026-02-16 12:17:06,270 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.is_active AS users_is_active, users.created_at AS users_created_at, users.updated_at AS users_updated_at 
+FROM users 
+WHERE users.id IN ($1::UUID, $2::UUID)
+2026-02-16 12:17:06,270 INFO sqlalchemy.engine.Engine [cached since 61.84s ago] (UUID('780a71ec-9a28-4365-8f2d-73a104a701dc'), UUID('816b0b54-3ccc-4ca1-867b-cc96f6b349a8'))
+2026-02-16 12:17:06,271 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     172.24.0.1:37506 - "POST /api/chat/private HTTP/1.1" 200 OK
+2026-02-16 12:17:08,711 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-02-16 12:17:08,712 INFO sqlalchemy.engine.Engine SELECT conversation_participants.id, conversation_participants.conversation_id, conversation_participants.user_id, conversation_participants.joined_at, conversation_participants.last_read_at 
+FROM conversation_participants 
+WHERE conversation_participants.conversation_id = $1::UUID AND conversation_participants.user_id = $2::UUID
+2026-02-16 12:17:08,712 INFO sqlalchemy.engine.Engine [cached since 62s ago] (UUID('92ac850d-25b5-40e3-8a74-b262fc7400b0'), '780a71ec-9a28-4365-8f2d-73a104a701dc')
+2026-02-16 12:17:08,713 INFO sqlalchemy.engine.Engine INSERT INTO messages (id, conversation_id, sender_id, content, message_type, status, is_edited, created_at, updated_at, delivered_at, read_at) VALUES ($1::UUID, $2::UUID, $3::UUID, $4::VARCHAR, $5::messagetype, $6::messagestatus, $7::BOOLEAN, $8::TIMESTAMP WITHOUT TIME ZONE, $9::TIMESTAMP WITHOUT TIME ZONE, $10::TIMESTAMP WITHOUT TIME ZONE, $11::TIMESTAMP WITHOUT TIME ZONE)
+2026-02-16 12:17:08,713 INFO sqlalchemy.engine.Engine [cached since 62s ago] (UUID('0e0f0860-3ec3-4641-9651-31f8ecbb0408'), UUID('92ac850d-25b5-40e3-8a74-b262fc7400b0'), '780a71ec-9a28-4365-8f2d-73a104a701dc', 'hii', 'TEXT', 'SENT', False, datetime.datetime(2026, 2, 16, 12, 17, 8, 713050), datetime.datetime(2026, 2, 16, 12, 17, 8, 713052), None, None)
+2026-02-16 12:17:08,713 INFO sqlalchemy.engine.Engine COMMIT
+2026-02-16 12:17:08,716 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-02-16 12:17:08,716 INFO sqlalchemy.engine.Engine SELECT messages.id, messages.conversation_id, messages.sender_id, messages.content, messages.message_type, messages.status, messages.is_edited, messages.created_at, messages.updated_at, messages.delivered_at, messages.read_at 
+FROM messages 
+WHERE messages.id = $1::UUID
+2026-02-16 12:17:08,716 INFO sqlalchemy.engine.Engine [cached since 62s ago] (UUID('0e0f0860-3ec3-4641-9651-31f8ecbb0408'),)
+2026-02-16 12:17:08,717 INFO sqlalchemy.engine.Engine SELECT conversation_participants.id, conversation_participants.conversation_id, conversation_participants.user_id, conversation_participants.joined_at, conversation_participants.last_read_at 
+FROM conversation_participants 
+WHERE conversation_participants.conversation_id = $1::UUID
+2026-02-16 12:17:08,717 INFO sqlalchemy.engine.Engine [cached since 62s ago] (UUID('92ac850d-25b5-40e3-8a74-b262fc7400b0'),)
+2026-02-16 12:17:36,896 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     172.24.0.1:58940 - "OPTIONS /api/friends/requests HTTP/1.1" 200 OK
+2026-02-16 12:17:36,971 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-02-16 12:17:36,972 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.is_active, users.created_at, users.updated_at 
+FROM users 
+WHERE users.email = $1::VARCHAR
+2026-02-16 12:17:36,972 INFO sqlalchemy.engine.Engine [cached since 94.12s ago] ('amit1@gmail.com',)
+2026-02-16 12:17:36,973 INFO sqlalchemy.engine.Engine SELECT friend_requests.id, friend_requests.sender_id, friend_requests.receiver_id, friend_requests.status, friend_requests.created_at, friend_requests.updated_at 
+FROM friend_requests 
+WHERE friend_requests.receiver_id = $1::UUID AND friend_requests.status = $2::friendrequeststatus ORDER BY friend_requests.created_at DESC
+2026-02-16 12:17:36,973 INFO sqlalchemy.engine.Engine [cached since 94.12s ago] (UUID('816b0b54-3ccc-4ca1-867b-cc96f6b349a8'), 'PENDING')
+2026-02-16 12:17:36,974 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     172.24.0.1:58940 - "GET /api/friends/requests HTTP/1.1" 200 OK
+INFO:     172.24.0.1:58940 - "OPTIONS /api/friends HTTP/1.1" 200 OK
+INFO:     172.24.0.1:58954 - "GET /api/friends HTTP/1.1" 307 Temporary Redirect
+INFO:     172.24.0.1:58954 - "OPTIONS /api/friends/ HTTP/1.1" 200 OK
+2026-02-16 12:17:37,711 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-02-16 12:17:37,711 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.is_active, users.created_at, users.updated_at 
+FROM users 
+WHERE users.email = $1::VARCHAR
+2026-02-16 12:17:37,711 INFO sqlalchemy.engine.Engine [cached since 94.86s ago] ('amit1@gmail.com',)
+2026-02-16 12:17:37,712 INFO sqlalchemy.engine.Engine SELECT friends.id, friends.user_id, friends.friend_id, friends.created_at 
+FROM friends 
+WHERE friends.user_id = $1::UUID
+2026-02-16 12:17:37,712 INFO sqlalchemy.engine.Engine [cached since 93.88s ago] (UUID('816b0b54-3ccc-4ca1-867b-cc96f6b349a8'),)
+2026-02-16 12:17:37,713 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.is_active AS users_is_active, users.created_at AS users_created_at, users.updated_at AS users_updated_at 
+FROM users 
+WHERE users.id IN ($1::UUID)
+2026-02-16 12:17:37,713 INFO sqlalchemy.engine.Engine [cached since 93.87s ago] (UUID('780a71ec-9a28-4365-8f2d-73a104a701dc'),)
+2026-02-16 12:17:37,714 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     172.24.0.1:58940 - "GET /api/friends/ HTTP/1.1" 200 OK
+INFO:     172.24.0.1:58940 - "OPTIONS /api/chat/private HTTP/1.1" 200 OK
+2026-02-16 12:17:38,338 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-02-16 12:17:38,339 INFO sqlalchemy.engine.Engine SELECT users.id, users.email, users.password_hash, users.is_active, users.created_at, users.updated_at 
+FROM users 
+WHERE users.email = $1::VARCHAR
+2026-02-16 12:17:38,339 INFO sqlalchemy.engine.Engine [cached since 95.49s ago] ('amit1@gmail.com',)
+2026-02-16 12:17:38,341 INFO sqlalchemy.engine.Engine SELECT conversations.id, conversations.type, conversations.name, conversations.created_at, conversations.updated_at 
+FROM conversations JOIN conversation_participants AS conversation_participants_1 ON conversations.id = conversation_participants_1.conversation_id JOIN conversation_participants AS conversation_participants_2 ON conversations.id = conversation_participants_2.conversation_id 
+WHERE conversations.type = $1::conversationtype AND conversation_participants_1.user_id = $2::UUID AND conversation_participants_2.user_id = $3::UUID
+2026-02-16 12:17:38,341 INFO sqlalchemy.engine.Engine [cached since 93.97s ago] ('PRIVATE', UUID('816b0b54-3ccc-4ca1-867b-cc96f6b349a8'), UUID('780a71ec-9a28-4365-8f2d-73a104a701dc'))
+2026-02-16 12:17:38,342 INFO sqlalchemy.engine.Engine SELECT conversation_participants.conversation_id AS conversation_participants_conversation_id, conversation_participants.id AS conversation_participants_id, conversation_participants.user_id AS conversation_participants_user_id, conversation_participants.joined_at AS conversation_participants_joined_at, conversation_participants.last_read_at AS conversation_participants_last_read_at 
+FROM conversation_participants 
+WHERE conversation_participants.conversation_id IN ($1::UUID)
+2026-02-16 12:17:38,342 INFO sqlalchemy.engine.Engine [cached since 93.96s ago] (UUID('92ac850d-25b5-40e3-8a74-b262fc7400b0'),)
+2026-02-16 12:17:38,343 INFO sqlalchemy.engine.Engine SELECT messages.conversation_id AS messages_conversation_id, messages.id AS messages_id, messages.sender_id AS messages_sender_id, messages.content AS messages_content, messages.message_type AS messages_message_type, messages.status AS messages_status, messages.is_edited AS messages_is_edited, messages.created_at AS messages_created_at, messages.updated_at AS messages_updated_at, messages.delivered_at AS messages_delivered_at, messages.read_at AS messages_read_at 
+FROM messages 
+WHERE messages.conversation_id IN ($1::UUID)
+2026-02-16 12:17:38,343 INFO sqlalchemy.engine.Engine [cached since 93.96s ago] (UUID('92ac850d-25b5-40e3-8a74-b262fc7400b0'),)
+2026-02-16 12:17:38,344 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.email AS users_email, users.password_hash AS users_password_hash, users.is_active AS users_is_active, users.created_at AS users_created_at, users.updated_at AS users_updated_at 
+FROM users 
+WHERE users.id IN ($1::UUID, $2::UUID)
+2026-02-16 12:17:38,344 INFO sqlalchemy.engine.Engine [cached since 93.92s ago] (UUID('780a71ec-9a28-4365-8f2d-73a104a701dc'), UUID('816b0b54-3ccc-4ca1-867b-cc96f6b349a8'))
+2026-02-16 12:17:38,344 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     172.24.0.1:58954 - "POST /api/chat/private HTTP/1.1" 200 OK

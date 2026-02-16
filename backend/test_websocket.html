@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Test - ChatApp</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 30px;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .auth-section, .ws-section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .status.connected {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status.disconnected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .messages {
+            background: #f8f9fa;
+            border-radius: 6px;
+            padding: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+        
+        .message {
+            background: white;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .message.sent {
+            background: #e3f2fd;
+        }
+        
+        .message.received {
+            background: #f3e5f5;
+        }
+        
+        .message.system {
+            background: #fff3cd;
+            border-left: 3px solid #ffc107;
+        }
+        
+        .message-time {
+            font-size: 11px;
+            color: #999;
+            margin-left: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 WebSocket Test Client</h1>
+            <p>ChatApp Real-Time Communication</p>
+        </div>
+        
+        <div class="content">
+            <!-- Authentication Section -->
+            <div class="auth-section">
+                <div class="section-title">1. Authentication</div>
+                
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" id="email" placeholder="user@example.com" value="testuser@example.com">
+                </div>
+                
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="password" placeholder="Password" value="SecurePassword123!">
+                </div>
+                
+                <button id="loginBtn">Login & Get Token</button>
+                
+                <div id="tokenDisplay" style="margin-top: 15px; display: none;">
+                    <label>Access Token:</label>
+                    <input type="text" id="token" readonly style="background: #f8f9fa;">
+                </div>
+            </div>
+            
+            <!-- WebSocket Section -->
+            <div class="ws-section">
+                <div class="section-title">2. WebSocket Connection</div>
+                
+                <div>
+                    <span id="status" class="status disconnected">Disconnected</span>
+                </div>
+                
+                <button id="connectBtn" disabled>Connect to WebSocket</button>
+                <button id="disconnectBtn" disabled>Disconnect</button>
+                
+                <div class="input-group" style="margin-top: 15px;">
+                    <label>Send Message</label>
+                    <input type="text" id="messageInput" placeholder="Type a message..." disabled>
+                </div>
+                
+                <button id="sendBtn" disabled>Send Message</button>
+                <button id="pingBtn" disabled>Send Ping</button>
+                <button id="getUsersBtn" disabled>Get Online Users</button>
+                
+                <div class="messages" id="messages"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let ws = null;
+        let accessToken = null;
+        
+        // DOM elements
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const loginBtn = document.getElementById('loginBtn');
+        const tokenInput = document.getElementById('token');
+        const tokenDisplay = document.getElementById('tokenDisplay');
+        const connectBtn = document.getElementById('connectBtn');
+        const disconnectBtn = document.getElementById('disconnectBtn');
+        const statusEl = document.getElementById('status');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const pingBtn = document.getElementById('pingBtn');
+        const getUsersBtn = document.getElementById('getUsersBtn');
+        const messagesEl = document.getElementById('messages');
+        
+        // Login
+        loginBtn.addEventListener('click', async () => {
+            const email = emailInput.value;
+            const password = passwordInput.value;
+            
+            try {
+                const response = await fetch('http://localhost:8000/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    accessToken = data.access_token;
+                    tokenInput.value = accessToken;
+                    tokenDisplay.style.display = 'block';
+                    connectBtn.disabled = false;
+                    addMessage('Login successful! You can now connect to WebSocket.', 'system');
+                } else {
+                    const error = await response.json();
+                    addMessage(`Login failed: ${error.detail}`, 'system');
+                }
+            } catch (error) {
+                addMessage(`Error: ${error.message}`, 'system');
+            }
+        });
+        
+        // Connect to WebSocket
+        connectBtn.addEventListener('click', () => {
+            if (!accessToken) {
+                addMessage('Please login first!', 'system');
+                return;
+            }
+            
+            ws = new WebSocket(`ws://localhost:8000/ws?token=${accessToken}`);
+            
+            ws.onopen = () => {
+                statusEl.textContent = 'Connected';
+                statusEl.className = 'status connected';
+                connectBtn.disabled = true;
+                disconnectBtn.disabled = false;
+                messageInput.disabled = false;
+                sendBtn.disabled = false;
+                pingBtn.disabled = false;
+                getUsersBtn.disabled = false;
+                addMessage('WebSocket connected!', 'system');
+            };
+            
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                addMessage(`Received: ${JSON.stringify(data, null, 2)}`, 'received');
+            };
+            
+            ws.onerror = (error) => {
+                addMessage(`WebSocket error: ${error}`, 'system');
+            };
+            
+            ws.onclose = () => {
+                statusEl.textContent = 'Disconnected';
+                statusEl.className = 'status disconnected';
+                connectBtn.disabled = false;
+                disconnectBtn.disabled = true;
+                messageInput.disabled = true;
+                sendBtn.disabled = true;
+                pingBtn.disabled = true;
+                getUsersBtn.disabled = true;
+                addMessage('WebSocket disconnected!', 'system');
+            };
+        });
+        
+        // Disconnect
+        disconnectBtn.addEventListener('click', () => {
+            if (ws) {
+                ws.close();
+            }
+        });
+        
+        // Send message
+        sendBtn.addEventListener('click', () => {
+            const message = messageInput.value;
+            if (message && ws) {
+                const data = { type: 'message', content: message };
+                ws.send(JSON.stringify(data));
+                addMessage(`Sent: ${message}`, 'sent');
+                messageInput.value = '';
+            }
+        });
+        
+        // Send ping
+        pingBtn.addEventListener('click', () => {
+            if (ws) {
+                ws.send(JSON.stringify({ type: 'ping' }));
+                addMessage('Sent ping', 'sent');
+            }
+        });
+        
+        // Get online users
+        getUsersBtn.addEventListener('click', () => {
+            if (ws) {
+                ws.send(JSON.stringify({ type: 'get_online_users' }));
+                addMessage('Requested online users', 'sent');
+            }
+        });
+        
+        // Enter to send
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendBtn.click();
+            }
+        });
+        
+        // Add message to display
+        function addMessage(text, type = 'received') {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            const time = new Date().toLocaleTimeString();
+            messageDiv.innerHTML = `${text}<span class="message-time">${time}</span>`;
+            messagesEl.appendChild(messageDiv);
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 361B done
+#1 WARN: FromAsCasing: 'as' and 'FROM' keywords' casing do not match (line 2)
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/nginx:alpine
+#2 ...
+
+#3 [internal] load metadata for docker.io/library/node:18-alpine
+#3 DONE 0.4s
+
+#2 [internal] load metadata for docker.io/library/nginx:alpine
+#2 DONE 0.4s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 72B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 983B done
+#5 DONE 0.0s
+
+#6 [stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:1d13701a5f9f3fb01aaa88cef2344d65b6b5bf6b7d9fa4cf0dca557a8d7702ba
+#6 resolve docker.io/library/nginx:alpine@sha256:1d13701a5f9f3fb01aaa88cef2344d65b6b5bf6b7d9fa4cf0dca557a8d7702ba 0.0s done
+#6 DONE 0.0s
+
+#7 [build 1/6] FROM docker.io/library/node:18-alpine@sha256:8d6421d663b4c28fd3ebc498332f249011d118945588d0a35cb9bc4b8ca09d9e
+#7 resolve docker.io/library/node:18-alpine@sha256:8d6421d663b4c28fd3ebc498332f249011d118945588d0a35cb9bc4b8ca09d9e 0.0s done
+#7 DONE 0.0s
+
+#8 [build 2/6] WORKDIR /app
+#8 CACHED
+
+#9 [build 3/6] COPY package*.json ./
+#9 CACHED
+
+#10 [build 4/6] RUN npm install
+#10 CACHED
+
+#11 [build 5/6] COPY . .
+#11 CACHED
+
+#12 [build 6/6] RUN npm run build
+#12 0.298 
+#12 0.298 > frontend@0.0.0 build
+#12 0.298 > tsc && vite build
+#12 0.298 
+#12 1.116 You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+#12 1.215 vite v7.3.1 building client environment for production...
+#12 1.418 transforming...
+#12 1.424 Γ£ô 2 modules transformed.
+#12 1.427 Γ£ù Build failed in 192ms
+#12 1.427 error during build:
+#12 1.427 [vite:asset] Could not load /vite.svg (imported by src/main.ts): crypto.hash is not a function
+#12 1.427     at getHash (file:///app/node_modules/vite/dist/node/chunks/config.js:2444:19)
+#12 1.427     at publicFileToBuiltUrl (file:///app/node_modules/vite/dist/node/chunks/config.js:8747:17)
+#12 1.427     at fileToBuiltUrl (file:///app/node_modules/vite/dist/node/chunks/config.js:8771:15)
+#12 1.427     at fileToUrl$1 (file:///app/node_modules/vite/dist/node/chunks/config.js:8718:14)
+#12 1.427     at Object.handler (file:///app/node_modules/vite/dist/node/chunks/config.js:8671:23)
+#12 1.427     at Object.handler (file:///app/node_modules/vite/dist/node/chunks/config.js:33718:13)
+#12 1.427     at file:///app/node_modules/rollup/dist/es/shared/node-entry.js:22548:40
+#12 1.427     at async PluginDriver.hookFirstAndGetPlugin (file:///app/node_modules/rollup/dist/es/shared/node-entry.js:22430:28)
+#12 1.427     at async file:///app/node_modules/rollup/dist/es/shared/node-entry.js:21422:33
+#12 1.427     at async Queue.work (file:///app/node_modules/rollup/dist/es/shared/node-entry.js:22658:32)
+#12 ERROR: process "/bin/sh -c npm run build" did not complete successfully: exit code: 1
+------
+ > [build 6/6] RUN npm run build:
+1.427     at getHash (file:///app/node_modules/vite/dist/node/chunks/config.js:2444:19)
+1.427     at publicFileToBuiltUrl (file:///app/node_modules/vite/dist/node/chunks/config.js:8747:17)
+1.427     at fileToBuiltUrl (file:///app/node_modules/vite/dist/node/chunks/config.js:8771:15)
+1.427     at fileToUrl$1 (file:///app/node_modules/vite/dist/node/chunks/config.js:8718:14)
+1.427     at Object.handler (file:///app/node_modules/vite/dist/node/chunks/config.js:8671:23)
+1.427     at Object.handler (file:///app/node_modules/vite/dist/node/chunks/config.js:33718:13)
+1.427     at file:///app/node_modules/rollup/dist/es/shared/node-entry.js:22548:40
+1.427     at async PluginDriver.hookFirstAndGetPlugin (file:///app/node_modules/rollup/dist/es/shared/node-entry.js:22430:28)
+1.427     at async file:///app/node_modules/rollup/dist/es/shared/node-entry.js:21422:33
+1.427     at async Queue.work (file:///app/node_modules/rollup/dist/es/shared/node-entry.js:22658:32)
+------
+
+ 1 warning found (use docker --debug to expand):
+ - FromAsCasing: 'as' and 'FROM' keywords' casing do not match (line 2)
+Dockerfile:10
+--------------------
+   8 |     
+   9 |     COPY . .
+  10 | >>> RUN npm run build
+  11 |     
+  12 |     # Serve stage
+--------------------
+ERROR: failed to build: failed to solve: process "/bin/sh -c npm run build" did not complete successfully: exit code: 1
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/x23b3e5i401f9nqhpuh3bbkrw
